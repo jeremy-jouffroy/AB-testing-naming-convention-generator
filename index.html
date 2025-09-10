@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AB Test Naming Convention Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .form-container {
+            padding: 40px;
+        }
+
+        .convention-format {
+            background: #f8f9fa;
+            border-left: 4px solid #4facfe;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .convention-format h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .convention-format code {
+            background: #e9ecef;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 14px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .suggestion-list {
+            background: #f8f9fa;
+            border: 1px solid #e1e5e9;
+            border-radius: 4px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .suggestion-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #e1e5e9;
+        }
+
+        .suggestion-item:hover {
+            background: #e9ecef;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .generated-name {
+            background: #333;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 18px;
+            margin: 20px 0;
+            word-break: break-all;
+            position: relative;
+        }
+
+        .copy-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .copy-btn:active {
+            transform: translateY(1px);
+        }
+
+        .help-text {
+            color: #6c757d;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>AB Test Naming Generator</h1>
+            <p>Generate standardized experiment names following your convention</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="convention-format">
+                <h3>Naming Convention Format:</h3>
+                <code>YYMM_Brand_Country_Support_Scope&Description_Version_Allocation</code>
+            </div>
+            
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="date">Launch Date (YYMM)</label>
+                    <input type="text" id="date" placeholder="2509" maxlength="4">
+                    <div class="help-text">Year and Month (e.g., 2509 for Sept 2025)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="brand">Brand (2 letters)</label>
+                    <input type="text" id="brand" placeholder="SV" maxlength="2" style="text-transform: uppercase;">
+                    <div class="suggestion-list" id="brandSuggestions"></div>
+                    <div class="help-text">SV, BB, JJ, AL (all)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Country (2 letters)</label>
+                    <input type="text" id="country" placeholder="FR" maxlength="2" style="text-transform: uppercase;">
+                    <div class="suggestion-list" id="countrySuggestions"></div>
+                    <div class="help-text">FR, ES, BE, DE, WW (worldwide)</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="support">Support Platform</label>
+                    <select id="support">
+                        <option value="">Select platform</option>
+                        <option value="Web">Web</option>
+                        <option value="App">App</option>
+                        <option value="All">All</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="scope">Scope & Description</label>
+                    <input type="text" id="scope" placeholder="HP-Chat-Bot">
+                    <div class="suggestion-list" id="scopeSuggestions"></div>
+                    <div class="help-text">HP, Quote, Checkout, Header, Footer, etc.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="version">Version</label>
+                    <input type="text" id="version" placeholder="V1" style="text-transform: uppercase;">
+                    <div class="help-text">V1, V2, V3...</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="allocation">Target Allocation</label>
+                    <input type="text" id="allocation" placeholder="ALL">
+                    <div class="suggestion-list" id="allocationSuggestions"></div>
+                    <div class="help-text">ALL, Funnel-Abandonners, Customers, New-Visitors, etc.</div>
+                </div>
+            </div>
+            
+            <div class="result-section">
+                <h3>Generated Experiment Name:</h3>
+                <div class="generated-name" id="generatedName">
+                    Fill in the form fields above to generate your experiment name
+                </div>
+                <button class="copy-btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Predefined suggestions
+        const suggestions = {
+            brand: ['SV', 'BB', 'JJ', 'AL'],
+            country: ['FR', 'ES', 'BE', 'DE', 'WW', 'IT', 'NL', 'PT', 'UK'],
+            scope: ['HP', 'Quote', 'Checkout', 'Header', 'Footer', 'LP', 'Insurance-List', 'Search', 'Cart', 'PDP'],
+            allocation: ['ALL', 'Funnel-Abandonners', 'Customers', 'New-Visitors', 'Returning-Visitors', 'Mobile-Users', 'Desktop-Users', 'GGAds-Visitors']
+        };
+
+        // Auto-fill current date
+        function setCurrentDate() {
+            const now = new Date();
+            const year = now.getFullYear().toString().substr(-2);
+            const month = (now.getMonth() + 1).toString().padStart(2, '0');
+            document.getElementById('date').value = year + month;
+        }
+
+        // Setup suggestion functionality
+        function setupSuggestions(inputId, suggestionKey) {
+            const input = document.getElementById(inputId);
+            const suggestionList = document.getElementById(inputId + 'Suggestions');
+            
+            input.addEventListener('input', function() {
+                const value = this.value.toUpperCase();
+                const filtered = suggestions[suggestionKey].filter(item => 
+                    item.toUpperCase().includes(value) && item.toUpperCase() !== value
+                );
+                
+                if (filtered.length > 0 && value.length > 0) {
+                    suggestionList.innerHTML = filtered.map(item => 
+                        `<div class="suggestion-item" onclick="selectSuggestion('${inputId}', '${item}')">${item}</div>`
+                    ).join('');
+                    suggestionList.style.display = 'block';
+                } else {
+                    suggestionList.style.display = 'none';
+                }
+                
+                generateName();
+            });
+            
+            input.addEventListener('blur', function() {
+                setTimeout(() => {
+                    suggestionList.style.display = 'none';
+                }, 200);
+            });
+        }
+
+        function selectSuggestion(inputId, value) {
+            document.getElementById(inputId).value = value;
+            document.getElementById(inputId + 'Suggestions').style.display = 'none';
+            generateName();
+        }
+
+        // Generate experiment name
+        function generateName() {
+            const date = document.getElementById('date').value;
+            const brand = document.getElementById('brand').value.toUpperCase();
+            const country = document.getElementById('country').value.toUpperCase();
+            const support = document.getElementById('support').value;
+            const scope = document.getElementById('scope').value;
+            const version = document.getElementById('version').value.toUpperCase();
+            const allocation = document.getElementById('allocation').value;
+            
+            if (date && brand && country && support && scope && version && allocation) {
+                const name = `${date}_${brand}_${country}_${support}_${scope}_${version}_${allocation}`;
+                document.getElementById('generatedName').textContent = name;
+            } else {
+                document.getElementById('generatedName').textContent = 'Fill in all fields to generate your experiment name';
+            }
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const name = document.getElementById('generatedName').textContent;
+            if (name && name !== 'Fill in all fields to generate your experiment name') {
+                navigator.clipboard.writeText(name).then(function() {
+                    const btn = document.querySelector('.copy-btn');
+                    const originalText = btn.textContent;
+                    btn.textContent = '✅ Copied!';
+                    btn.style.background = '#28a745';
+                    setTimeout(() => {
+                        btn.textContent = originalText;
+                        btn.style.background = '#28a745';
+                    }, 2000);
+                });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setCurrentDate();
+            setupSuggestions('brand', 'brand');
+            setupSuggestions('country', 'country');
+            setupSuggestions('scope', 'scope');
+            setupSuggestions('allocation', 'allocation');
+            
+            // Add event listeners for all inputs
+            const inputs = ['date', 'brand', 'country', 'support', 'scope', 'version', 'allocation'];
+            inputs.forEach(id => {
+                const element = document.getElementById(id);
+                element.addEventListener('input', generateName);
+                element.addEventListener('change', generateName);
+            });
+            
+            generateName();
+        });
+    </script>
+</body>
+</html>
