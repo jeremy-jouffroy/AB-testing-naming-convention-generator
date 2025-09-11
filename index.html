@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AB Test Naming Convention Generator</title>
+    <title>AB Test Name Generator</title>
     <style>
         * {
             margin: 0;
@@ -12,7 +12,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             padding: 20px;
@@ -22,63 +22,35 @@
             max-width: 800px;
             margin: 0 auto;
             background: white;
-            border-radius: 12px;
+            border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             padding: 30px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2.5rem;
             margin-bottom: 10px;
-            font-weight: 300;
+            font-weight: 700;
         }
 
         .header p {
+            font-size: 1.1rem;
             opacity: 0.9;
-            font-size: 1.1em;
         }
 
         .form-container {
             padding: 40px;
         }
 
-        .convention-format {
-            background: #f8f9fa;
-            border-left: 4px solid #4facfe;
-            padding: 20px;
-            margin-bottom: 30px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .convention-format h3 {
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .convention-format code {
-            background: #e9ecef;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 14px;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
@@ -86,99 +58,181 @@
             margin-bottom: 8px;
             font-weight: 600;
             color: #333;
+            font-size: 1rem;
         }
 
-        .form-group input, .form-group select {
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input, select, textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 15px;
             border: 2px solid #e1e5e9;
             border-radius: 8px;
-            font-size: 16px;
-            transition: border-color 0.3s ease;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
         }
 
-        .form-group input:focus, .form-group select:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #4facfe;
-            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
 
-        .suggestion-list {
-            background: #f8f9fa;
-            border: 1px solid #e1e5e9;
-            border-radius: 4px;
-            max-height: 150px;
-            overflow-y: auto;
-            margin-top: 5px;
-            display: none;
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
-        .suggestion-item {
-            padding: 8px 12px;
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .generate-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
             cursor: pointer;
-            border-bottom: 1px solid #e1e5e9;
+            width: 100%;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .suggestion-item:hover {
-            background: #e9ecef;
+        .generate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
 
-        .suggestion-item:last-child {
-            border-bottom: none;
+        .result-container {
+            margin-top: 30px;
+            padding: 25px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
         }
 
-        .result-section {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 30px;
-            text-align: center;
+        .result-container h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.3rem;
         }
 
         .generated-name {
-            background: #333;
-            color: white;
-            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #667eea;
+            background: white;
+            padding: 15px;
             border-radius: 8px;
-            font-family: 'Monaco', 'Consolas', monospace;
-            font-size: 18px;
-            margin: 20px 0;
+            border: 2px dashed #667eea;
             word-break: break-all;
-            position: relative;
+            margin-bottom: 15px;
         }
 
         .copy-btn {
             background: #28a745;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
+            padding: 10px 20px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            transition: background 0.3s ease;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .copy-btn:hover {
             background: #218838;
+            transform: translateY(-1px);
         }
 
-        .copy-btn:active {
-            transform: translateY(1px);
+        .format-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
         }
 
-        .help-text {
-            color: #6c757d;
-            font-size: 0.9em;
-            margin-top: 5px;
+        .format-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .format-info p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .format-example {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .autocomplete {
+            position: relative;
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .autocomplete-item:hover {
+            background: #f8f9fa;
         }
 
         @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
+            .form-row {
+                flex-direction: column;
             }
             
             .header h1 {
-                font-size: 2em;
+                font-size: 2rem;
             }
             
             .form-container {
@@ -190,183 +244,267 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>AB Test Naming Generator</h1>
-            <p>Generate standardized experiment names following your convention</p>
+            <h1>🧪 AB Test Name Generator</h1>
+            <p>Generate standardized AB test names following your internal naming convention</p>
         </div>
-        
+
         <div class="form-container">
-            <div class="convention-format">
-                <h3>Naming Convention Format:</h3>
-                <code>YYMM_Brand_Country_Support_Scope&Description_Version_Allocation</code>
+            <div class="format-info">
+                <h3>📋 Naming Convention Format</h3>
+                <p><strong>YYMM_Brand_Country_Support_Scope&Description_Version_Allocation</strong></p>
+                <div class="format-example">
+                    Examples:<br>
+                    2509_sv_fr_web_hp-chat-bot_v1_all<br>
+                    2509_sv|bb_fr_web_hp-chat-bot_v1_all<br>
+                    2509_sv_fr|es|be_web_checkout-special-coupon_v2_customers
+                </div>
             </div>
-            
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="date">Launch Date (YYMM)</label>
-                    <input type="text" id="date" placeholder="2509" maxlength="4">
-                    <div class="help-text">Year and Month (e.g., 2509 for Sept 2025)</div>
+
+            <form id="abTestForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="launchDate">📅 Launch Date</label>
+                        <input type="date" id="launchDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="version">🔢 Version</label>
+                        <input type="text" id="version" value="V1" placeholder="V1, V2, V3...">
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="brand">Brand (2 letters)</label>
-                    <input type="text" id="brand" placeholder="SV" maxlength="2" style="text-transform: uppercase;">
-                    <div class="suggestion-list" id="brandSuggestions"></div>
-                    <div class="help-text">SV, BB, JJ, AL (all)</div>
+                    <label for="brand">🏢 Brand (Select one or more)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sv" value="SV">
+                            <label for="sv">SV</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="bb" value="BB">
+                            <label for="bb">BB</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="jj" value="JJ">
+                            <label for="jj">JJ</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="al" value="AL">
+                            <label for="al">AL (All)</label>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="country">Country (2 letters)</label>
-                    <input type="text" id="country" placeholder="FR" maxlength="2" style="text-transform: uppercase;">
-                    <div class="suggestion-list" id="countrySuggestions"></div>
-                    <div class="help-text">FR, ES, BE, DE, WW (worldwide)</div>
+                    <label for="country">🌍 Country (Select one or more)</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="fr" value="FR">
+                            <label for="fr">FR (France)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="es" value="ES">
+                            <label for="es">ES (Spain)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="be" value="BE">
+                            <label for="be">BE (Belgium)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="de" value="DE">
+                            <label for="de">DE (Germany)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="it" value="IT">
+                            <label for="it">IT (Italy)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ww" value="WW">
+                            <label for="ww">WW (Worldwide)</label>
+                        </div>
+                    </div>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="support">Support Platform</label>
-                    <select id="support">
-                        <option value="">Select platform</option>
+                    <label for="support">💻 Platform Support</label>
+                    <select id="support" required>
+                        <option value="">Select Platform</option>
                         <option value="Web">Web</option>
-                        <option value="App">App</option>
-                        <option value="All">All</option>
+                        <option value="APP">APP</option>
+                        <option value="Web+APP">Web+APP</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="scope">Scope & Description</label>
-                    <input type="text" id="scope" placeholder="HP-Chat-Bot">
-                    <div class="suggestion-list" id="scopeSuggestions"></div>
-                    <div class="help-text">HP, Quote, Checkout, Header, Footer, etc.</div>
+                    <label for="scope">🎯 Scope & Description</label>
+                    <div class="autocomplete">
+                        <input type="text" id="scope" placeholder="e.g., hp-chat-bot, checkout-special-coupon, header-navigation" required>
+                        <div class="autocomplete-list" id="scopeAutocomplete"></div>
+                    </div>
+                    <small style="color: #666; font-size: 0.9rem;">Use hyphens to separate words (e.g., checkout-special-coupon)</small>
                 </div>
-                
+
                 <div class="form-group">
-                    <label for="version">Version</label>
-                    <input type="text" id="version" placeholder="V1" style="text-transform: uppercase;">
-                    <div class="help-text">V1, V2, V3...</div>
+                    <label for="allocation">👥 Target Allocation</label>
+                    <div class="autocomplete">
+                        <input type="text" id="allocation" placeholder="e.g., all, customers, new-visitors, ggads-visitors" required>
+                        <div class="autocomplete-list" id="allocationAutocomplete"></div>
+                    </div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="allocation">Target Allocation</label>
-                    <input type="text" id="allocation" placeholder="ALL">
-                    <div class="suggestion-list" id="allocationSuggestions"></div>
-                    <div class="help-text">ALL, Funnel-Abandonners, Customers, New-Visitors, etc.</div>
-                </div>
-            </div>
-            
-            <div class="result-section">
-                <h3>Generated Experiment Name:</h3>
-                <div class="generated-name" id="generatedName">
-                    Fill in the form fields above to generate your experiment name
-                </div>
-                <button class="copy-btn" onclick="copyToClipboard()">📋 Copy to Clipboard</button>
+
+                <button type="submit" class="generate-btn">🚀 Generate AB Test Name</button>
+            </form>
+
+            <div id="result" class="result-container" style="display: none;">
+                <h3>✅ Generated AB Test Name:</h3>
+                <div id="generatedName" class="generated-name"></div>
+                <button id="copyBtn" class="copy-btn">📋 Copy to Clipboard</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Predefined suggestions
-        const suggestions = {
-            brand: ['SV', 'BB', 'JJ', 'AL'],
-            country: ['FR', 'ES', 'BE', 'DE', 'WW', 'IT', 'NL', 'PT', 'UK'],
-            scope: ['HP', 'Quote', 'Checkout', 'Header', 'Footer', 'LP', 'Insurance-List', 'Search', 'Cart', 'PDP'],
-            allocation: ['ALL', 'Funnel-Abandonners', 'Customers', 'New-Visitors', 'Returning-Visitors', 'Mobile-Users', 'Desktop-Users', 'GGAds-Visitors']
-        };
+        // Autocomplete suggestions
+        const scopeSuggestions = [
+            'hp-chat-bot', 'checkout-special-coupon', 'header-navigation', 'footer-links',
+            'insurance-list', 'quote-form', 'hero-banner', 'sidebar-widget',
+            'search-filters', 'product-carousel', 'login-modal', 'signup-flow',
+            'payment-options', 'cart-summary', 'recommendation-engine'
+        ];
 
-        // Auto-fill current date
-        function setCurrentDate() {
-            const now = new Date();
-            const year = now.getFullYear().toString().substr(-2);
-            const month = (now.getMonth() + 1).toString().padStart(2, '0');
-            document.getElementById('date').value = year + month;
-        }
+        const allocationSuggestions = [
+            'all', 'customers', 'new-visitors', 'funnel-abandonners',
+            'ggads-visitors', 'fb-ads-visitors', 'mobile-users', 'desktop-users',
+            'returning-users', 'premium-users', 'trial-users'
+        ];
 
-        // Setup suggestion functionality
-        function setupSuggestions(inputId, suggestionKey) {
+        // Set default date to current date
+        document.getElementById('launchDate').valueAsDate = new Date();
+
+        // Autocomplete functionality
+        function setupAutocomplete(inputId, suggestions, listId) {
             const input = document.getElementById(inputId);
-            const suggestionList = document.getElementById(inputId + 'Suggestions');
-            
+            const list = document.getElementById(listId);
+
             input.addEventListener('input', function() {
-                const value = this.value.toUpperCase();
-                const filtered = suggestions[suggestionKey].filter(item => 
-                    item.toUpperCase().includes(value) && item.toUpperCase() !== value
+                const value = this.value.toLowerCase();
+                const filtered = suggestions.filter(item => 
+                    item.toLowerCase().includes(value)
                 );
-                
+
                 if (filtered.length > 0 && value.length > 0) {
-                    suggestionList.innerHTML = filtered.map(item => 
-                        `<div class="suggestion-item" onclick="selectSuggestion('${inputId}', '${item}')">${item}</div>`
+                    list.innerHTML = filtered.map(item => 
+                        `<div class="autocomplete-item" onclick="selectItem('${inputId}', '${item}')">${item}</div>`
                     ).join('');
-                    suggestionList.style.display = 'block';
+                    list.style.display = 'block';
                 } else {
-                    suggestionList.style.display = 'none';
+                    list.style.display = 'none';
                 }
-                
-                generateName();
             });
-            
+
             input.addEventListener('blur', function() {
-                setTimeout(() => {
-                    suggestionList.style.display = 'none';
-                }, 200);
+                setTimeout(() => list.style.display = 'none', 200);
             });
         }
 
-        function selectSuggestion(inputId, value) {
+        function selectItem(inputId, value) {
             document.getElementById(inputId).value = value;
-            document.getElementById(inputId + 'Suggestions').style.display = 'none';
-            generateName();
+            document.getElementById(inputId + 'Autocomplete').style.display = 'none';
         }
 
-        // Generate experiment name
-        function generateName() {
-            const date = document.getElementById('date').value;
-            const brand = document.getElementById('brand').value.toUpperCase();
-            const country = document.getElementById('country').value.toUpperCase();
-            const support = document.getElementById('support').value;
-            const scope = document.getElementById('scope').value;
-            const version = document.getElementById('version').value.toUpperCase();
-            const allocation = document.getElementById('allocation').value;
-            
-            if (date && brand && country && support && scope && version && allocation) {
-                const name = `${date}_${brand}_${country}_${support}_${scope}_${version}_${allocation}`;
-                document.getElementById('generatedName').textContent = name;
-            } else {
-                document.getElementById('generatedName').textContent = 'Fill in all fields to generate your experiment name';
-            }
-        }
+        setupAutocomplete('scope', scopeSuggestions, 'scopeAutocomplete');
+        setupAutocomplete('allocation', allocationSuggestions, 'allocationAutocomplete');
 
-        // Copy to clipboard
-        function copyToClipboard() {
-            const name = document.getElementById('generatedName').textContent;
-            if (name && name !== 'Fill in all fields to generate your experiment name') {
-                navigator.clipboard.writeText(name).then(function() {
-                    const btn = document.querySelector('.copy-btn');
-                    const originalText = btn.textContent;
-                    btn.textContent = '✅ Copied!';
-                    btn.style.background = '#28a745';
-                    setTimeout(() => {
-                        btn.textContent = originalText;
-                        btn.style.background = '#28a745';
-                    }, 2000);
-                });
-            }
-        }
+        // Form submission
+        document.getElementById('abTestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateTestName();
+        });
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            setCurrentDate();
-            setupSuggestions('brand', 'brand');
-            setupSuggestions('country', 'country');
-            setupSuggestions('scope', 'scope');
-            setupSuggestions('allocation', 'allocation');
-            
-            // Add event listeners for all inputs
-            const inputs = ['date', 'brand', 'country', 'support', 'scope', 'version', 'allocation'];
-            inputs.forEach(id => {
-                const element = document.getElementById(id);
-                element.addEventListener('input', generateName);
-                element.addEventListener('change', generateName);
+        function generateTestName() {
+            // Get launch date and format as YYMM
+            const launchDate = new Date(document.getElementById('launchDate').value);
+            const yymm = launchDate.getFullYear().toString().substr(-2) + 
+                         (launchDate.getMonth() + 1).toString().padStart(2, '0');
+
+            // Get selected brands
+            const brands = [];
+            document.querySelectorAll('input[type="checkbox"][id^="sv"], input[type="checkbox"][id^="bb"], input[type="checkbox"][id^="jj"], input[type="checkbox"][id^="al"]').forEach(checkbox => {
+                if (checkbox.checked) {
+                    brands.push(checkbox.value.toLowerCase());
+                }
             });
+
+            // Get selected countries
+            const countries = [];
+            document.querySelectorAll('input[type="checkbox"][id^="fr"], input[type="checkbox"][id^="es"], input[type="checkbox"][id^="be"], input[type="checkbox"][id^="de"], input[type="checkbox"][id^="it"], input[type="checkbox"][id^="ww"]').forEach(checkbox => {
+                if (checkbox.checked) {
+                    countries.push(checkbox.value.toLowerCase());
+                }
+            });
+
+            // Get other fields
+            const support = document.getElementById('support').value.toLowerCase();
+            const scope = document.getElementById('scope').value.toLowerCase().replace(/\s+/g, '-');
+            const version = document.getElementById('version').value.toLowerCase();
+            const allocation = document.getElementById('allocation').value.toLowerCase().replace(/\s+/g, '-');
+
+            // Validation
+            if (brands.length === 0) {
+                alert('Please select at least one brand');
+                return;
+            }
+            if (countries.length === 0) {
+                alert('Please select at least one country');
+                return;
+            }
+            if (!support) {
+                alert('Please select a platform support option');
+                return;
+            }
+            if (!scope) {
+                alert('Please enter a scope and description');
+                return;
+            }
+            if (!allocation) {
+                alert('Please enter a target allocation');
+                return;
+            }
+
+            // Generate the name
+            const brandString = brands.join('|');
+            const countryString = countries.join('|');
             
-            generateName();
+            const testName = `${yymm}_${brandString}_${countryString}_${support}_${scope}_${version}_${allocation}`;
+
+            // Display result
+            document.getElementById('generatedName').textContent = testName;
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Copy to clipboard functionality
+        document.getElementById('copyBtn').addEventListener('click', function() {
+            const testName = document.getElementById('generatedName').textContent;
+            navigator.clipboard.writeText(testName).then(function() {
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '✅ Copied!';
+                btn.style.background = '#28a745';
+                
+                setTimeout(function() {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#28a745';
+                }, 2000);
+            });
+        });
+
+        // Auto-format version input
+        document.getElementById('version').addEventListener('input', function() {
+            let value = this.value.toUpperCase();
+            if (value && !value.startsWith('V')) {
+                value = 'V' + value.replace(/^V+/, '');
+            }
+            this.value = value;
         });
     </script>
 </body>
